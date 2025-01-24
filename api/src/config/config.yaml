@@ -1,0 +1,4 @@
+MONGODB:
+  URL: mongodb://localhost:27017
+  USER: user
+  PASSWORD: passwd
