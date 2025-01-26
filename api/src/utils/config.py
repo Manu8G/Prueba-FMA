@@ -5,7 +5,7 @@ import os
 
 
 class Config:
-    def __init__(self, config_path=f"{path_repo}/FastAPI/config/config.yaml", secrets_path=f"{path_repo}/FastAPI/config/config-secret.yaml") -> None:
+    def __init__(self, config_path=f"{path_repo}/api/src/config/config.yaml", secrets_path=f"{path_repo}/api/src/config/config-secret.yaml") -> None:
         try:
             logging.info("Loading Config File...")
             if os.path.exists(config_path):

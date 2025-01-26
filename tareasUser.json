@@ -1,0 +1,24 @@
+[
+    {
+        "title": "Montar BD de Mongo",
+        "description": "Utilizaremos una BD de Mongo para guardar las colecciones de datos necesarias para la aplicación",
+        "status": "in progress",
+        "created_at": new Date(),
+        "updated_at": new Date("2025-01-31T09:21:56Z"),
+        "user_id": 2
+    },{
+        "title": "Crear Docker",
+        "description": "Crear un contenedor docker que guarde la BD y el backend de la aplicación",
+        "status": "completed",
+        "created_at": new Date(),
+        "updated_at": new Date("2025-01-30T11:12:13Z"),
+        "user_id": 2
+    },{
+        "title": "Crear Frontend",
+        "description": "Creación de un frontend simple de Angular para poder visualizar facilmente la aplicación",
+        "status": "pending",
+        "created_at": new Date(),
+        "updated_at": new Date(),
+        "user_id": 2
+    }
+]

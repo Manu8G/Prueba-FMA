@@ -1,18 +1,13 @@
 from pydantic import BaseModel
 from datetime import date
 from enum import Enum
-
-class estado(str, Enum):
-    PENDING = "pending"
-    IN_PROGRESS = "in progress"
-    COMPLETED = "completed"
-    
+from utils.utils import estadoTarea
 
 class Tarea(BaseModel):
     id: str
     title: str
     description: str
-    status: estado
+    status: estadoTarea
     created_at: date
     updated_at: date
     

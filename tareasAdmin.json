@@ -1,0 +1,18 @@
+[
+    {
+        "title": "Crear backend",
+        "description": "Utilizaremos FastApi para la creacion del backend",
+        "status": "completed",
+        "created_at": new Date(),
+        "updated_at": new Date("2025-01-30T12:49:51Z"),
+        "user_id": 1
+    },{
+        "title": "Configurar AWS",
+        "description": "Utilizaremos un EC2 para ejecutar nuestro docker",
+        "status": "in progress",
+        "created_at": new Date(),
+        "updated_at": new Date("2025-01-31T19:23:17Z"),
+        "user_id": 1
+    }
+]
+

@@ -1,19 +1,16 @@
-from sqlalchemy import Column, Integer, String, Date
-from model import Base
-from enum import Enum as PyEnum
+from pydantic import BaseModel, Field
+from bson import ObjectId
+from utils.db_connections import PyObjectId
+from enum import Enum
+from datetime import datetime
+from utils.utils import estadoTarea
+from typing import Optional
 
-class estado(str, PyEnum):
-    PENDING = "pending"
-    IN_PROGRESS = "in progress"
-    COMPLETED = "completed"
-
-class Tarea(Base):
-    __tablename__ = "Tarea"
-
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    title = Column(String, index=True)
-    description = Column(String, index=True)
-    status = Column(Enum(estado), nullable=False)
-    created_at = Column(Date, index=True)
-    updated_at = Column(Date, index=True)
+class Tarea(BaseModel):
+    id: Optional[PyObjectId] = Field(alias="_id") 
+    title: str  
+    description: Optional[str] = None  
+    status: estadoTarea
+    created_at: datetime
+    updated_at: datetime
     

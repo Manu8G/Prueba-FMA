@@ -3,4 +3,4 @@ from pydantic import BaseModel
 class User(BaseModel):
     name: str
     password: str
-    rol: str
+    role: str
