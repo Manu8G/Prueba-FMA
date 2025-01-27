@@ -1,67 +1,77 @@
-from sqlalchemy.orm import Session
-from model.user import User
-from datetime import datetime
+from bson import ObjectId
 
-from utils.utils import pwd_context
-from utils.db_connections import create_db_connection
+from utils.db_connections import db
+from service.user_service import UserService
+from dto.tarea import Tarea
 
-class SurveyRepository:
+servicio_usuario = UserService()
+
+class TareasRepository:
     
     def __init__(self) -> None:
-        self.db = create_db_connection()
-
-    # Funciones necesarias: 
-    # Crear tarea 
-    # Leer tarea
-    # Modificar tarea
-    # Eliminar tarea 
-    # Listar tareas para usuario determinado
-    def create_survey_in_db(self, nombre: str, id_usuario: int):
-        encuestas = api.list_surveys()
-        for i in encuestas:
-            if i[1] == nombre:
-                id_formulario_version = i[0]
-                break
-        db_formulario = Formulario(id_formulario=id_formulario_version, nombre=nombre, id_usuario=id_usuario)
-        self.db.add(db_formulario)
-        self.db.commit()
-        self.db.refresh(db_formulario)
-
-        current_date = datetime.now()
-        formatted_date = current_date.strftime("%Y-%m-%d")
-
-        db_Vformulario = VersionFormulario(id_formulario=id_formulario_version, id_version_formulario=id_formulario_version, fecha=formatted_date)
-        self.db.add(db_Vformulario)
-        self.db.commit()
-        self.db.refresh(db_Vformulario)
-        return db_formulario
+        None
     
-
-    def eliminar_encuesta(self, id: str):
-        try:
-            db_formado = self.db.query(Formado).filter(Formado.id_formulario == id).first()
-            db_Vformulario = self.db.query(VersionFormulario).filter(VersionFormulario.id_formulario == id).first()
-            db_formulario = self.db.query(Formulario).filter(Formulario.id_formulario == id).first()
-            
-            if db_formado:
-                self.db.delete(db_formado)
-                self.db.commit()
-
-            if db_Vformulario:
-                self.db.delete(db_Vformulario)
-                self.db.commit()
-
-            self.db.delete(db_formulario)
-            self.db.commit()
-
-            api.delete_survey(id)
-
-            return {"mensaje": "Formulario eliminado correctamente"}
-
-        except Exception as e:
-            print(f"Error al eliminar la encuesta: {e}")
-            return {"error": str(e)}
-
+    def crear_tarea(nueva_tarea: Tarea):
+        dic_tarea = nueva_tarea.model_dump(by_alias=True)  # Convertir a dict con alias (_id -> id)
+        return db.tareas.insert_one(dic_tarea)
         
 
+    def leer_tarea(id_tarea: str):
+        if not ObjectId.is_valid(id_tarea):
+            return {"message": "El tipo de dato recibido es erroneo"}
+        
+        tarea_buscada = db.tareas.find_one({"_id": ObjectId(id_tarea)})
+        
+        if tarea_buscada:
+            return tarea_buscada  
+        else:
+            return {"message": "Tarea no encontrada, algo ha ido muy mal"}
+        
+
+    def listar_tareas(id_usuario: str):
+        tipo_user = servicio_usuario.get_role(id_usuario)
+        if tipo_user == 'user':
+            filtro = {
+                "_id": id_usuario
+            }
+            
+            tareas =  db.tareas.find(filtro) 
+            return tareas
+        
+        elif tipo_user == 'admin':
+            tareas =  db.tareas.find()  
+            '''
+            Se podrian haber creado filtros para que mostrase solo las tareas propias y las de los usuarios user, 
+            excluyendo asi las tareas de otros admin pero al no aparecer en el documento no se ha implementado,
+            se deja un ejemplo de como seria el filtro aplicado:
+            filtro = {
+                "$or": [
+                    {"_id": id_usuario},     
+                    {"Role": "user"}           
+                ]
+            }
+            '''
+            return tareas
+            
+
+
+    def actualizar_tarea(id_tarea: str, tareaModificada: Tarea):
+        datosModificados = {k: v for k, v in tareaModificada.model_dump(by_alias=True).items() if v is not None}
+        '''
+        model_dump  -> paso a dic
+        items       -> Devuelve una lista de pares
+        '''
+        result =  db.tareas.update_one(
+            {"_id": ObjectId(id_tarea)},
+            {"$set": datosModificados}
+        )
+        if result.modified_count == 1:
+            actualizacionTarea =  db.tareas.find_one({"_id": ObjectId(id_tarea)})
+            return actualizacionTarea
+       
+
+    def eliminar_tarea(id_tarea: str):
+        result =  db.tareas.delete_one({"_id": ObjectId(id_tarea)})
+        if result.deleted_count == 1:
+            return {"message": "Tarea eliminada correctamente"}
     

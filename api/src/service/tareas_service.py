@@ -1,34 +1,41 @@
-from repository.survey_repository import SurveyRepository
+from repository.tareas_repository import TareasRepository
+from dto.tarea import Tarea
 
-
-class encuestaService:
+class TareaService:
   def __init__(self):
-    self.survey_repository = SurveyRepository()
-    
-  # Las funciones necesarias son las mismas que en tareas_repository
-  def crear_encuesta(self, nombre_encuesta: str, idioma: str):
-    try:
-      return api.add_survey(nombre_encuesta, idioma)
-    except Exception as e:
-      raise RuntimeError(f"EncuestaServices: algo fue mal en create_encuesta: {str(e)}")
+    self.tareas_repository = TareasRepository() 
 
-
-  def listar_encuestas(self):
+  def crear_tarea(nueva_tarea: Tarea):
     try:
-      surveys = api.list_surveys()
-      cont = 0
-      datos = {}
-      for sid, survey_title in surveys:
-          datos[f"{sid}"] = survey_title
-          cont += 1
-      return datos
+      return self.tareas_repository.crear_tarea(nueva_tarea)
     except Exception as e:
-      raise RuntimeError(f"EncuestaServices: algo fue mal en listar_encuestas: {str(e)}")
-    
+      raise RuntimeError(f"Ha habido un error en el servicio de tareas{str(e)}")
+        
 
-  def eliminar_encuesta(self, id: str):
-    try:
-      return self.survey_repository.eliminar_encuesta(id=id)
+  def leer_tarea(id_tarea: str):
+    try:  
+      return self.tareas_repository.leer_tarea(id_tarea)
     except Exception as e:
-      raise RuntimeError(f"EncuestaServices: algo fue mal en eliminar_encuesta: {str(e)}")
-  
+      raise RuntimeError(f"Ha habido un error en el servicio de tareas{str(e)}")  
+          
+
+  def listar_tareas(id_usuario: str):
+    try:  
+      return self.tareas_repository.listar_tareas(id_usuario)
+    except Exception as e:
+      raise RuntimeError(f"Ha habido un error en el servicio de tareas{str(e)}")  
+          
+
+  def actualizar_tarea(id_tarea: str, tareaModificada: Tarea):
+    try:  
+      return self.tareas_repository.actualizar_tarea(id_tarea, tareaModificada)
+    except Exception as e:
+      raise RuntimeError(f"Ha habido un error en el servicio de tareas{str(e)}")  
+          
+
+  def eliminar_tarea(id_tarea: str):
+    try:  
+      return self.tareas_repository.eliminar_tarea(id_tarea)
+    except Exception as e:
+      raise RuntimeError(f"Ha habido un error en el servicio de tareas{str(e)}")  
+          

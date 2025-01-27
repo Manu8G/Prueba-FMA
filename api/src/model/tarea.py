@@ -7,10 +7,10 @@ from utils.utils import estadoTarea
 from typing import Optional
 
 class Tarea(BaseModel):
-    id: Optional[PyObjectId] = Field(alias="_id") 
+    _id: Optional[PyObjectId] # = Field(alias="_id") Se podria haber usado alias 
     title: str  
     description: Optional[str] = None  
     status: estadoTarea
     created_at: datetime
     updated_at: datetime
-    
+    user_id: Optional[PyObjectId]
