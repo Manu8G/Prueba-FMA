@@ -4,10 +4,10 @@ from utils.db_connections import db
 
 class UserRepository:
     
-    def __init__(self) -> None:
+    def __init__(self):
         None
 
-    def get_user(self, name: str) -> User:
+    def get_user(self, name: str):
         filtro = {
                 "Name": name
             }

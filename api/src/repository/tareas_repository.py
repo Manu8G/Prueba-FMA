@@ -8,12 +8,13 @@ servicio_usuario = UserService()
 
 class TareasRepository:
     
-    def __init__(self) -> None:
+    def __init__(self):
         None
     
-    def crear_tarea(nueva_tarea: Tarea):
+    async def crear_tarea(self, nueva_tarea: Tarea):
         dic_tarea = nueva_tarea.model_dump(by_alias=True)  # Convertir a dict con alias (_id -> id)
-        return db.tareas.insert_one(dic_tarea)
+        result = await db.tareas.insert_one(dic_tarea)
+        return result
         
 
     def leer_tarea(id_tarea: str):

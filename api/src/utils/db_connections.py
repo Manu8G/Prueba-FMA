@@ -1,5 +1,4 @@
 from motor.motor_asyncio import AsyncIOMotorClient
-from model import Base
 from utils.config import Config
 from bson import ObjectId
 

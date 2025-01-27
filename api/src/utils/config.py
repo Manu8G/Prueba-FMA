@@ -1,5 +1,5 @@
 import yaml
-from utils import path_repo
+from utils.utils import path_repo
 import logging
 import os
 
