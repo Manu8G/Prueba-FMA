@@ -1,8 +1,8 @@
 from bson import ObjectId
 
-from utils.db_connections import db
-from service.user_service import UserService
-from dto.tarea import Tarea
+from src.utils.db_connections import db
+from src.service.user_service import UserService
+from src.dto.tarea import Tarea
 
 servicio_usuario = UserService()
 

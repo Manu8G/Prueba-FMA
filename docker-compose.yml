@@ -1,17 +1,17 @@
 version: '3.8'
 
 services:
-#  backend:
-#    build:
-#      context: ./api
-#      dockerfile: ./docker/Dockerfile
-#    command: run-dev
-#    volumes:
-#      - ./api/src/:/api/src/
-#    environment:
-#      - MONGODB_URL=mongodb://user:passwd@mongo:27017
-#    ports:
-#      - 8080:80
+  backend:
+    build:
+      context: ./api
+      dockerfile: ./docker/Dockerfile
+    command: run-dev
+    volumes:
+      - ./api/src/:/api/src/
+    environment:
+      - MONGODB_URL=mongodb://user:passwd@mongo:27017
+    ports:
+      - 8080:80
   mongo:
     image: mongo:bionic
     restart: always

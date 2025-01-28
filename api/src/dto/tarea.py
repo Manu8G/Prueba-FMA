@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
-from utils.utils import estadoTarea
+from src.utils.utils import estadoTarea
 
 class Tarea(BaseModel):
     title: str

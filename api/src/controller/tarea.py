@@ -2,13 +2,13 @@ from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse
 from datetime import timedelta
 
-from dto.token import Token
-from dto.user import User
-from dto.tarea import Tarea
-from service.user_service import UserService
-from service.tareas_service import TareaService
+from src.dto.token import Token
+from src.dto.user import User
+from src.dto.tarea import Tarea
+from src.service.user_service import UserService
+from src.service.tareas_service import TareaService
 
-from utils.utils import verify_password, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token
+from src.utils.utils import verify_password, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token
 
 
 router = APIRouter(prefix="/admin", tags=["Admin"])

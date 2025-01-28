@@ -17,10 +17,14 @@ class estadoTarea(str, Enum):
     completed = "completed"
 
 
-actual_path = os.path.abspath(__file__)
-repo = git.Repo(search_parent_directories=True, path=actual_path)
-path_repo = repo.git.rev_parse("--show-toplevel")
-
+# actual_path = os.path.abspath(__file__)
+# parent_dir = os.path.dirname(actual_path)
+# print(f"Actual path: {actual_path}")
+# print(f"Actual parent_dir: {parent_dir}")
+# repo = git.Repo(search_parent_directories=True, path=parent_dir)
+# print(f"Git repo path: {repo.working_tree_dir}")
+# path_repo = repo.git.rev_parse("--show-toplevel")
+# print(f"Top-level path: {path_repo}")
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)

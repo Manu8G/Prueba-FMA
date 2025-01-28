@@ -1,6 +1,6 @@
-from model.user import User
+from src.model.user import User
 
-from utils.db_connections import db
+from src.utils.db_connections import db
 
 class UserRepository:
     

@@ -1,0 +1,12 @@
+fastapi==0.110.0
+uvicorn==0.29.0
+pymongo==4.9.2
+pytest==7.4.0
+pytest-asyncio==0.21.0
+gitdb==4.0.12
+GitPython==3.1.44
+jose==1.0.0
+python-jose==3.3.0
+motor==3.6.1
+passlib==1.7.4
+PyYAML==6.0

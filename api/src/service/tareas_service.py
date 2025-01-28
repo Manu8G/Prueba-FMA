@@ -1,5 +1,5 @@
-from repository.tareas_repository import TareasRepository
-from dto.tarea import Tarea
+from src.repository.tareas_repository import TareasRepository
+from src.dto.tarea import Tarea
 
 class TareaService:
   def __init__(self):

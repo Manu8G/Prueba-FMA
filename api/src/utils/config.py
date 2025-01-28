@@ -1,12 +1,13 @@
 import yaml
-from utils.utils import path_repo
+# from src.utils.utils import path_repo
 import logging
 import os
 
 
 class Config:
-    def __init__(self, config_path=f"{path_repo}/api/src/config/config.yaml", secrets_path=f"{path_repo}/api/src/config/config-secret.yaml") -> None:
+    def __init__(self, config_path=f"/api/src/config/config.yaml", secrets_path=f"/api/src/config/config-secret.yaml") -> None:
         try:
+            # {path_repo}
             logging.info("Loading Config File...")
             if os.path.exists(config_path):
                 self.config = self.load_yaml(config_path)

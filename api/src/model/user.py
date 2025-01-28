@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from bson import ObjectId
-from utils.db_connections import PyObjectId
+from src.utils.db_connections import PyObjectId
 from typing import Optional
 
 class User(BaseModel):

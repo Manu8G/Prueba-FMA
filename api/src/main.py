@@ -1,9 +1,9 @@
 import logging
-from controller.tarea import router
+from src.controller.tarea import router
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from src.utils.config import Config
 
-from utils.config import Config
 config=Config()
 logging.info(config.get("MONGODB"))
 app = FastAPI()

@@ -1,5 +1,5 @@
 from motor.motor_asyncio import AsyncIOMotorClient
-from utils.config import Config
+from src.utils.config import Config
 from bson import ObjectId
 
 config = Config()
