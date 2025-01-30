@@ -4,9 +4,9 @@ from bson import ObjectId
 
 config = Config()
 
-client = AsyncIOMotorClient(config.get("MONGO.URL"))
+client = AsyncIOMotorClient(config.get("MONGODB.URL"))
 db = client["pruebaTecnica"]
-    
+
 # Convertidor para ObjectId
 class PyObjectId(ObjectId):
     @classmethod

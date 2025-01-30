@@ -6,7 +6,7 @@ set -x # Print commands as they are executed
 case "$1" in
 "run-dev")
     # run dev
-    uvicorn src.main:src --host 0.0.0.0 --port 80 --reload
+    uvicorn src.main:app --host 0.0.0.0 --port 80 --reload
     ;;
 *) # run other
   exec "$@"

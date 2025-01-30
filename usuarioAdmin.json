@@ -1,6 +1,9 @@
 {
-    "id_user": 1,
+    "user_id": 1,
     "Name": "AdminCarlos",
     "Password": "1234",
     "Role": "admin"
 }
+# Soy muy consciente de que ese user_id es muy feo me gustaria hacerlo en condiciones cuando la 
+interfaz del frontend este lista donde un usuario al pulsar en crear una tarea se tomara su id
+autogenerado por mongo y se guardara en el campo correspondiente de la tarea creada

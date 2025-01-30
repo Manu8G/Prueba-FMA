@@ -12,6 +12,15 @@ services:
       - MONGODB_URL=mongodb://user:passwd@mongo:27017
     ports:
       - 8080:80
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ./docker/Dockerfile
+    # command: run-dev
+    # volumes:
+    #   - ./api/src/:/api/src/
+    ports:
+      - 4200:4200
   mongo:
     image: mongo:bionic
     restart: always

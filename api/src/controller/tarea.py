@@ -16,7 +16,7 @@ router = APIRouter(prefix="/admin", tags=["Admin"])
 servicio_usuario = UserService()
 servicio_tarea = TareaService()
 @router.post("/token", response_model=Token)
-async def login_for_access_token(usuario_recibido: User):
+def login_for_access_token(usuario_recibido: User):
     user = servicio_usuario.get_user(name=usuario_recibido.Name)
     rol = servicio_usuario.get_role(name=usuario_recibido.Name)
     if not user or not verify_password(usuario_recibido.Password, user.Password):
@@ -36,7 +36,7 @@ async def login_for_access_token(usuario_recibido: User):
 @router.post("/crear_tarea")
 async def crear_tarea(nueva_tarea: Tarea):
     try:
-        return servicio_tarea.crear_tarea(nueva_tarea)
+        return await servicio_tarea.crear_tarea(nueva_tarea)
     except Exception as e:
         return JSONResponse(status_code=500, content={"message": f"Ocurrio el siguiente error: {str(e)}"})
 
@@ -44,7 +44,7 @@ async def crear_tarea(nueva_tarea: Tarea):
 @router.get("/leer_tarea")
 async def leer_tarea(id_tarea: str):
     try:
-        return servicio_tarea.leer_tarea(id_tarea)
+        return await servicio_tarea.leer_tarea(id_tarea)
     except Exception as e:
         return JSONResponse(status_code=500, content={"message": f"Ocurrio el siguiente error: {str(e)}"})
     
@@ -52,7 +52,7 @@ async def leer_tarea(id_tarea: str):
 @router.get("/listar_tareas")   # tener en cuenta el tipo de usuario para que se vean unas tareas u otras
 async def listar_tareas(id_usuario: str):
     try:
-        return servicio_tarea.listar_tareas(id_usuario)
+        return await servicio_tarea.listar_tareas(id_usuario)
     except Exception as e:
         return JSONResponse(status_code=500, content={"message": f"Ocurrio el siguiente error: {str(e)}"})
     
@@ -60,7 +60,7 @@ async def listar_tareas(id_usuario: str):
 @router.put("/actualizar_tarea")
 async def actualizar_tarea(id_tarea: str, tareaModificada: Tarea):
     try:
-        return servicio_tarea.actualizar_tarea(id_tarea, tareaModificada)
+        return await servicio_tarea.actualizar_tarea(id_tarea, tareaModificada)
     except Exception as e:
         return JSONResponse(status_code=500, content={"message": f"Ocurrio el siguiente error: {str(e)}"})
     
@@ -68,7 +68,7 @@ async def actualizar_tarea(id_tarea: str, tareaModificada: Tarea):
 @router.delete("/eliminar_tarea")
 async def eliminar_tarea(id_tarea: str):
     try:
-        return servicio_tarea.eliminar_tarea(id_tarea)
+        return await servicio_tarea.eliminar_tarea(id_tarea)
     except Exception as e:
         return JSONResponse(status_code=500, content={"message": f"Ocurrio el siguiente error: {str(e)}"})
     
