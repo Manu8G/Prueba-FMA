@@ -37,14 +37,12 @@ class TareasRepository:
         tipo_user = user["Role"]
         # print("ARCHIVO 3.99"+str(tipo_user))
         if tipo_user == 'user':
-            print("ARCHIVO -0")
-            tareas = self.listar_tareas_propias(id_usuario)
-            print("ARCHIVO 2316"+str(tareas))
+            tareas = await self.listar_tareas_propias(id_usuario)
+            # print("TR LT Tareas"+str(tareas))
             return tareas
         
         elif tipo_user == 'admin':
-            print("ARCHIVO 7")
-            tareas =  db.tareas.find().to_list() 
+            tareas = await db.tareas.find().to_list() 
             '''
             Se podrian haber creado filtros para que mostrase solo las tareas propias y las de los usuarios user, 
             excluyendo asi las tareas de otros admin pero al no aparecer en el documento no se ha implementado,
@@ -56,22 +54,19 @@ class TareasRepository:
                 ]
             }
             '''
-            print("ARCHIVO 7")
+            # print("TR LT Tareas: "+str(tareas))
             return tareas
     
      
     # Funcion que nos permite listar las tareas propias de un usuario
     async def listar_tareas_propias(self, id_usuario: str):
-        print("ARCHIVO 6.5.4.3.2.1")
         user = await servicio_usuario.get_user_info(id_usuario)
-        print("ARCHIVO 6.5.4.3.2")
         filtro = {
             "user_id": user["user_id"]
         }
         coleccion = db["tareas"]
-        print("ARCHIVO 6.5.4.3"+str(coleccion))
-        tareas = coleccion.find(filtro).to_list()
-        print("ARCHIVO 6.5.4"+str(tareas))
+        tareas = await coleccion.find(filtro).to_list()
+        print("TR LTP tareas"+str(tareas))
         return tareas
 
 

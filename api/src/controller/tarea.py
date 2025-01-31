@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse
 from datetime import timedelta
+from bson import ObjectId
 
 from src.dto.token import Token
 from src.dto.user import User
@@ -44,7 +45,9 @@ async def crear_tarea(nueva_tarea: Tarea):
 @router.get("/leer_tarea")
 async def leer_tarea(id_tarea: str):
     try:
-        return await servicio_tarea.leer_tarea(id_tarea)
+        resultado = await servicio_tarea.leer_tarea(id_tarea)
+        # print("T LT Tareas"+str(resultado))
+        return resultado
     except Exception as e:
         return JSONResponse(status_code=500, content={"message": f"Ocurrio el siguiente error: {str(e)}"})
     
@@ -52,7 +55,15 @@ async def leer_tarea(id_tarea: str):
 @router.get("/listar_tareas")   # tener en cuenta el tipo de usuario para que se vean unas tareas u otras
 async def listar_tareas(id_usuario: str):
     try:
-        return await servicio_tarea.listar_tareas(id_usuario)
+        resultado = await servicio_tarea.listar_tareas(id_usuario)
+        
+        # Convertir ObjectId a str
+        for tarea in resultado:
+            if isinstance(tarea["_id"], ObjectId):
+                tarea["_id"] = str(tarea["_id"])
+        
+        print("T LT Tareas", resultado)
+        return resultado
     except Exception as e:
         return JSONResponse(status_code=500, content={"message": f"Ocurrio el siguiente error: {str(e)}"})
     

@@ -22,7 +22,7 @@ class UserRepository:
         coleccion = db["usuarios"]
         usuario = await coleccion.find_one(filtro)
         rol = usuario["Role"]
-        # print("ARCHIVO 3"+ str(rol))
+        # print("UR GR Rol Usuario"+ str(rol))
         return rol 
     
     
@@ -31,10 +31,8 @@ class UserRepository:
             "_id": ObjectId(id)
         }
         coleccion = db["usuarios"]
-        print("IDIDIDID: "+id)
-        print("COLECCION: "+str(coleccion))
         usuario = await coleccion.find_one(filtro)
-        print("ARCHIVO D"+str(usuario))
+        # print("UR GUI Informacion Usuario"+str(usuario))
         return usuario
       
     
