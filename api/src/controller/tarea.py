@@ -52,7 +52,7 @@ async def leer_tarea(id_tarea: str):
         return JSONResponse(status_code=500, content={"message": f"Ocurrio el siguiente error: {str(e)}"})
     
     
-@router.get("/listar_tareas")   # tener en cuenta el tipo de usuario para que se vean unas tareas u otras
+@router.get("/listar_tareas")   
 async def listar_tareas(id_usuario: str):
     try:
         resultado = await servicio_tarea.listar_tareas(id_usuario)

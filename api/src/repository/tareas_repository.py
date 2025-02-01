@@ -76,17 +76,18 @@ class TareasRepository:
         model_dump  -> paso a dic
         items       -> Devuelve una lista de pares
         '''
-        result =  db.tareas.update_one(
+        result = await db.tareas.update_one(
             {"_id": ObjectId(id_tarea)},
             {"$set": datosModificados}
         )
         if result.modified_count == 1:
-            actualizacionTarea =  db.tareas.find_one({"_id": ObjectId(id_tarea)})
+            actualizacionTarea = await db.tareas.find_one({"_id": ObjectId(id_tarea)})
+            actualizacionTarea["_id"] = str(actualizacionTarea["_id"])
             return actualizacionTarea
        
 
     async def eliminar_tarea(self, id_tarea: str):
-        result =  db.tareas.delete_one({"_id": ObjectId(id_tarea)})
+        result = await db.tareas.delete_one({"_id": ObjectId(id_tarea)})
         if result.deleted_count == 1:
             return {"message": "Tarea eliminada correctamente"}
     
