@@ -1,7 +1,5 @@
-from pydantic import BaseModel, Field
-from bson import ObjectId
+from pydantic import BaseModel
 from utils.db_connections import PyObjectId
-from enum import Enum
 from datetime import datetime
 from utils.utils import estadoTarea
 from typing import Optional

@@ -1,17 +1,14 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime
 from src.utils.utils import estadoTarea
+from pydantic import ConfigDict
 
 class Tarea(BaseModel):
     title: str
     description: str
     status: estadoTarea
-    created_at: datetime
-    updated_at: datetime
-    
-    class Config:
-        use_enum_values = True  # Convierte Enum automáticamente a su valor
-        json_encoders = {
-            datetime: lambda v: v.isoformat(),  # Convierte datetime a ISO 8601
-        }
-    
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+    # Configuración del modelo para Pydantic v2
+    model_config = ConfigDict(use_enum_values=True)  # Esto reemplaza la clase Config

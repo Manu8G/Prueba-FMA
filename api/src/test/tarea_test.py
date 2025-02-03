@@ -1,79 +1,38 @@
-import pytest
-import mongomock
-from bson import ObjectId
 from src.repository.tareas_repository import TareasRepository
 from src.dto.tarea import Tarea
-import sys
+from src.utils.db_connections import mock_db
+import pytest
 import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+import logging
+from src.controller.tarea import router
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from src.utils.config import Config
 
+config=Config()
+logging.info(config.get("MONGODB"))
+app = FastAPI()
 
-# Creamos una DB de prueba para tratar sobre datos no sensibles y probar el funcionamiento correcto de las funciones
-@pytest.fixture
-def mock_db():
-    client = mongomock.MongoClient()
-    db = client["test_database"]
-    db.tareas = db["tareas"] 
-    '''
-    db.tareas.insert_many(
-        [
-            {
-                "title": "TEST-Crear backend",
-                "description": "TEST-Utilizaremos FastApi para la creacion del backend",
-                "status": "completed",
-                "created_at": new Date(),
-                "updated_at": new Date("2025-01-30T12:49:51Z"),
-                "user_id": 1
-            },{
-                "title": "TEST-Configurar AWS",
-                "description": "TEST-Utilizaremos un EC2 para ejecutar nuestro docker",
-                "status": "in progress",
-                "created_at": new Date(),
-                "updated_at": new Date("2025-01-31T19:23:17Z"),
-                "user_id": 1
-            },{
-                "title": "TEST-Montar BD de Mongo",
-                "description": "TEST-Utilizaremos una BD de Mongo para guardar las colecciones de datos necesarias para la aplicación",
-                "status": "in progress",
-                "created_at": new Date(),
-                "updated_at": new Date("2025-01-31T09:21:56Z"),
-                "user_id": 2
-            },{
-                "title": "TEST-Crear Docker",
-                "description": "TEST-Crear un contenedor docker que guarde la BD y el backend de la aplicación",
-                "status": "completed",
-                "created_at": new Date(),
-                "updated_at": new Date("2025-01-30T11:12:13Z"),
-                "user_id": 2
-            },{
-                "title": "TEST-Crear Frontend",
-                "description": "TEST-Creación de un frontend simple de Angular para poder visualizar facilmente la aplicación",
-                "status": "pending",
-                "created_at": new Date(),
-                "updated_at": new Date(),
-                "user_id": 2
-            }
-        ]
-    )'''
-    db.usuarios = db["usuarios"] 
-    '''
-    db.usuarios.insert_many(
-        [
-            {
-                "user_id": 1,
-                "Name": "AdminCarlos",
-                "Password": "1234",
-                "Role": "admin"
-            },{
-                "user_id": 2,
-                "Name": "userNicolas",
-                "Password": "1234",
-                "Role": "user"
-            }
-        ]
-    )
-    '''
-    return db
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:4200"],  
+    allow_credentials=True,
+    allow_methods=["*"],  
+    allow_headers=["*"],  
+)
+
+app.include_router(router)
+
+@pytest.fixture(autouse=True)
+def set_working_directory():
+    # Guarda el directorio de trabajo original
+    original_dir = os.getcwd()
+    # Cambia el directorio al directorio raíz del proyecto
+    os.chdir(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+    yield
+    # Restaura el directorio de trabajo original después de la prueba
+    os.chdir(original_dir)
+
 
 # Instanciamos tareas para probar sus funciones
 @pytest.fixture
@@ -99,12 +58,13 @@ async def test_crear_tarea(tareas_repo):
 @pytest.mark.asyncio
 async def test_leer_tarea(tareas_repo):
     # Insertamos una tarea de prueba en la base de datos simulada
-    tarea_id = tareas_repo.db.tareas.insert_one({
+    tarea = await tareas_repo.db.tareas.insert_one({
         "title": "Tarea Test",
         "description": "Descripción Test",
         "status": "pending",
         "user_id": "12345"
-    }).inserted_id
+    })
+    tarea_id = tarea.inserted_id
 
     resultado = await tareas_repo.leer_tarea(str(tarea_id))
     
@@ -116,12 +76,13 @@ async def test_leer_tarea(tareas_repo):
 @pytest.mark.asyncio
 async def test_actualizar_tarea(tareas_repo):
     # Insertamos una tarea de prueba
-    tarea_id = tareas_repo.db.tareas.insert_one({
+    tarea = await tareas_repo.db.tareas.insert_one({
         "title": "Vieja Tarea",
         "description": "Vieja descripción",
         "status": "pending",
         "user_id": "12345"
-    }).inserted_id
+    })
+    tarea_id = tarea.inserted_id
 
     # Creamos un objeto de actualización
     tarea_modificada = Tarea(title="Nueva Tarea")
@@ -136,12 +97,13 @@ async def test_actualizar_tarea(tareas_repo):
 @pytest.mark.asyncio
 async def test_eliminar_tarea(tareas_repo):
     # Insertamos una tarea
-    tarea_id = tareas_repo.db.tareas.insert_one({
+    tarea = await tareas_repo.db.tareas.insert_one({
         "title": "Tarea a eliminar",
         "description": "Descripción",
         "status": "pending",
         "user_id": "12345"
-    }).inserted_id
+    })
+    tarea_id = tarea.inserted_id
 
     resultado = await tareas_repo.eliminar_tarea(str(tarea_id))
 

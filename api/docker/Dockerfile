@@ -9,7 +9,7 @@ RUN pip install --no-cache-dir -Ur ./requirements.txt
 
 WORKDIR /api
 COPY ./src ./src
-
+COPY pytest.ini .
 COPY ./docker/entrypoint.sh ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
 
