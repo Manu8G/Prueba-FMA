@@ -4,6 +4,7 @@ from src.utils.db_connections import mock_db
 import pytest
 import os
 import logging
+import asyncio
 from src.controller.tarea import router
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -34,8 +35,15 @@ def set_working_directory():
     os.chdir(original_dir)
 
 
+@pytest.fixture(scope="session")
+def event_loop():
+    loop = asyncio.get_event_loop()
+    yield loop
+    loop.close()
+
+
 # Instanciamos tareas para probar sus funciones
-@pytest.fixture
+@pytest.fixture(scope="function")   # Crea nuevas instancias de la BD para cada test
 def tareas_repo(mock_db):
     repo = TareasRepository()
     repo.db = mock_db  # Sobrescribimos la base de datos con la simulada
@@ -45,7 +53,7 @@ def tareas_repo(mock_db):
 # Test para crear tarea
 @pytest.mark.asyncio
 async def test_crear_tarea(tareas_repo):
-    tarea = Tarea(title="TEST-Nueva Tarea Test", description="TEST-Descripción de la tarea", status="pending", user_id="1")
+    tarea = Tarea(title="TEST-Crear Tarea Test", description="TEST-Descripción de la tarea", status="pending", user_id="1")
     resultado = await tareas_repo.crear_tarea(tarea)
     
     assert "inserted_id" in resultado
@@ -58,54 +66,47 @@ async def test_crear_tarea(tareas_repo):
 @pytest.mark.asyncio
 async def test_leer_tarea(tareas_repo):
     # Insertamos una tarea de prueba en la base de datos simulada
-    tarea = await tareas_repo.db.tareas.insert_one({
-        "title": "Tarea Test",
-        "description": "Descripción Test",
-        "status": "pending",
-        "user_id": "12345"
-    })
-    tarea_id = tarea.inserted_id
-
+    print("TT TLT POINT1")
+    tarea = Tarea(title="TEST-Leer Tarea Test", description="TEST-Descripción de la tarea", status="pending", user_id="1")
+    print("TT TLT POINT2")
+    taera_insertada = await tareas_repo.crear_tarea(tarea)
+    print("TT TLT POINT3")
+    tarea_id = taera_insertada["inserted_id"]
+    print("TT TLT tarea_id = "+tarea_id)
+    
     resultado = await tareas_repo.leer_tarea(str(tarea_id))
     
     assert resultado["_id"] == str(tarea_id)
-    assert resultado["title"] == "Tarea Test"
+    assert resultado["title"] == "TEST-Leer Tarea Test"
 
 
 # Test para actualizar tarea concreta
 @pytest.mark.asyncio
 async def test_actualizar_tarea(tareas_repo):
     # Insertamos una tarea de prueba
-    tarea = await tareas_repo.db.tareas.insert_one({
-        "title": "Vieja Tarea",
-        "description": "Vieja descripción",
-        "status": "pending",
-        "user_id": "12345"
-    })
-    tarea_id = tarea.inserted_id
+    tarea = Tarea(title="TEST-Tarea Actualizar Test", description="TEST-Descripción Test", status="pending", user_id="12345")
+    taera_insertada = await tareas_repo.crear_tarea(tarea)
+    tarea_id = taera_insertada["inserted_id"]
 
     # Creamos un objeto de actualización
-    tarea_modificada = Tarea(title="Nueva Tarea")
+    tarea_modificada = Tarea(title="TEST-Tarea Actualizada", description="TEST-Descripción Test", status="pending", user_id="12345")
 
     resultado = await tareas_repo.actualizar_tarea(str(tarea_id), tarea_modificada)
     
     assert resultado["_id"] == str(tarea_id)
-    assert resultado["title"] == "Nueva Tarea"  # Se ha actualizado correctamente
+    assert resultado["title"] == "TEST-Tarea Actualizada"  # Se ha actualizado correctamente
 
 
 # Test para eliminar tarea
 @pytest.mark.asyncio
 async def test_eliminar_tarea(tareas_repo):
     # Insertamos una tarea
-    tarea = await tareas_repo.db.tareas.insert_one({
-        "title": "Tarea a eliminar",
-        "description": "Descripción",
-        "status": "pending",
-        "user_id": "12345"
-    })
-    tarea_id = tarea.inserted_id
-
+    # Insertamos una tarea de prueba
+    tarea = Tarea(title="TEST-Tarea Eliminar Test", description="Descripción Test", status="pending", user_id="12345")
+    taera_insertada = await tareas_repo.crear_tarea(tarea)
+    tarea_id = taera_insertada["inserted_id"]
+    
     resultado = await tareas_repo.eliminar_tarea(str(tarea_id))
 
     assert resultado == {"message": "Tarea eliminada correctamente"}
-    assert tareas_repo.db.tareas.count_documents({"_id": tarea_id}) == 0  # Verificar que se eliminó
+    assert await tareas_repo.leer_tarea(str(tarea_id)) == {"message": "Tarea no encontrada, algo ha ido muy mal"}  # Verificar que se eliminó 

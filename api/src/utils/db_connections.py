@@ -16,8 +16,8 @@ else:
     db = client["test_database"]
     
 # Creamos una DB de prueba para tratar sobre datos no sensibles y probar el funcionamiento correcto de las funciones
-@pytest.fixture
-def mock_db():
+@pytest.fixture(scope="function")
+async def mock_db():
     db.tareas = db["tareas"] 
     '''
     db.tareas.insert_many(
